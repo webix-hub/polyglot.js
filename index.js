@@ -17,14 +17,31 @@
 
 'use strict';
 
-var forEach = require('for-each');
-var warning = require('warning');
-var has = require('has');
-var trim = require('string.prototype.trim');
+// var has = require('has');
+function has(store, key) {
+  return Object.prototype.hasOwnProperty.call(store, key);
+}
+// var forEach = require('for-each');
+function forEach(obj, handler, context) {
+  for (var key in obj) {
+    if (has(obj, key)) {
+      handler.call((context || obj), obj[key], key, obj);
+    }
+  }
+}
+// var trim = require('string.prototype.trim');
+function trim(str) {
+  return str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+}
+// var warning = require('warning');
+function warn(message) {
+  message = 'Warning: ' + message;
+  if (typeof console !== 'undefined') {
+    console.error(message);
+  }
 
-var warn = function warn(message) {
-  warning(false, message);
-};
+  try { throw new Error(message); } catch (x) {}
+}
 
 var replace = String.prototype.replace;
 var split = String.prototype.split;
